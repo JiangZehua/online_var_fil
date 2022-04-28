@@ -5,7 +5,7 @@ name: 'dmlab'
 device: 'cuda'
 theta_window_size: 1
 phi_window_size: 1
-dataset_path: 'datasets\test1'
+dataset_path: 'datasets/test1'
 decoder_path: 'vae_decoder.pt'
 U_scalar: 0.1
 V_scalar: 0.1

@@ -42,7 +42,7 @@ class MyData(torch.utils.data.Dataset):
 def unnormalize(x, dataset):
     return dataset.data_mean + x * dataset.data_std
 
-dataset = MyData(r'datasets\train1')
+dataset = MyData(r'datasets/train1')
 dataloader = torch.utils.data.DataLoader(dataset, BATCH_SIZE, shuffle=True)
 
 # Models from https://github.com/karpathy/deep-vector-quantization

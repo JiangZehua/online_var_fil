@@ -1,6 +1,11 @@
 # ignore the png
 *.png
 
+# ignore the .DS_Store file
+.DS_Store
+
+# ignore the ipynb_checkpoints
+.ipynb_checkpoints
 
 # ignore the pycache
 __pycache__

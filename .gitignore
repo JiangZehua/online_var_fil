@@ -1,0 +1,6 @@
+# ignore the png
+*.png
+
+
+# ignore the pycache
+__pycache__

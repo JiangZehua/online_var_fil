@@ -452,7 +452,24 @@ def main(cfg):
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    model = torch.load('outputs/2022-04-28_11-55-39_dmlab_run/transitions/transition_3999.pt')
+    dataset = MyData(r'datasets/train1')
+    
+    z = torch.randn(16, model.z_dim, device=model.device)
+    image_batch = model.decoder(z)
+    fig, ax = plt.subplots(4, 4)
+    for k in range(5):
+        for i in range(4):
+            for j in range(4):
+                ax[i, j].imshow(
+                    unnormalize(image_batch[i * 4 + j, :, :, :], dataset)\
+                        .transpose(0,1).transpose(1,2).cpu().detach().numpy()
+                )
+                image_batch = model.decoder(image_batch)
+        plt.show()
+
+    
 
 
 

@@ -9,6 +9,7 @@ import os
 import torchvision.transforms as transforms
 import PIL
 import torch.nn.functional as F
+from pdb import set_trace as TT 
 
 BATCH_SIZE = 32
 
@@ -170,39 +171,40 @@ class Model(nn.Module):
         z = torch.randn(num_samples, self.z_dim, device=self.device)
         images = self.decoder(z)
         return images
+        
+if __name__ == '__main__':
+    model = Model().cuda()
+    #%%
 
-model = Model().cuda()
-#%%
+    optimizer = torch.optim.Adam(model.parameters(), lr=model.learning_rate)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=model.learning_rate)
+    losses = []
+    print("Training model")
+    for epoch in tqdm(range(100)):
+        for batch in dataloader:
+            optimizer.zero_grad()
+            loss = model.get_loss(batch)
+            loss.backward()
+            optimizer.step()
 
-losses = []
-print("Training model")
-for epoch in tqdm(range(100)):
-    for batch in dataloader:
-        optimizer.zero_grad()
-        loss = model.get_loss(batch)
-        loss.backward()
-        optimizer.step()
+            losses.append(loss.item())
+    #%%
+    plt.plot(losses)
+    plt.show()
 
-        losses.append(loss.item())
-#%%
-plt.plot(losses)
-plt.show()
+    #%%
+    #   z = torch.randn(16, model.z_dim, device=model.device)
+    #   image_batch = model.decoder(z)
+    #   fig, ax = plt.subplots(4, 4)
+    #   for i in range(4):
+    #       for j in range(4):
+    #           ax[i, j].imshow(
+    #               unnormalize(image_batch[i * 4 + j, :, :, :], dataset)\
+    #                   .transpose(0,1).transpose(1,2).cpu().detach().numpy()
+    #           )
+    #   plt.show()
 
-#%%
-z = torch.randn(16, model.z_dim, device=model.device)
-image_batch = model.decoder(z)
-fig, ax = plt.subplots(4, 4)
-for i in range(4):
-    for j in range(4):
-        ax[i, j].imshow(
-            unnormalize(image_batch[i * 4 + j, :, :, :], dataset)\
-                .transpose(0,1).transpose(1,2).cpu().detach().numpy()
-        )
-plt.show()
-
-# %%
-torch.save(model.decoder.state_dict(), 'vae_decoder.pt')
-torch.save(model.encoder.state_dict(), 'vae_encoder.pt')
-# %%
+    # %%
+    torch.save(model.decoder.state_dict(), 'vae_decoder.pt')
+    torch.save(model.encoder.state_dict(), 'vae_encoder.pt')
+    # %%

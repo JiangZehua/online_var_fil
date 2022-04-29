@@ -5,10 +5,11 @@ from matplotlib import pyplot as plt
 import numpy as np
 from pdb import set_trace as TT
 from PIL import Image
+from dmlab import G_Module
 
 import torch
 
-from vae import Model, MyData\
+from vae import DeepMindDecoder, Model, MyData\
     , unnormalize
 
 # def unnormalize(x, mean_path, std_path):
@@ -41,26 +42,31 @@ if __name__ == '__main__':
     q_stds = np.load(join(data_path, "q_stds.npy"))
     dataset = MyData(r'datasets/test1')
 
-    model = Model().cuda()
+    # model = Model().cuda()
+    model = G_Module().cuda()
 
-    z = q_means[100:106, :]
-    y = q_stds[100:106, :]
-    z = torch.from_numpy(z).cuda()
-    y = torch.from_numpy(y).cuda()
+    # z = q_means[100:106, :]
+    # y = q_stds[100:106, :]
+    # z = torch.from_numpy(z).cuda()
+    # y = torch.from_numpy(y).cuda()
 
-    # image_batch = model.decoder(z)
-    image_batch = model.decoder(y)
+    x = torch.randn(16, 32, device='cuda')
+    # x = z + y * x
 
-    fig, ax = plt.subplots(1, 5)
-    for j in range(5):
-        ax[j].imshow(
-            unnormalize(image_batch[j, :, :, :], dataset)\
-                .transpose(0,1).transpose(1,2).cpu().detach().numpy()
-            # unnormalize(image_batch[j, :, :, :], mean_path, std_path)\
-            #     .transpose(0,1).transpose(1,2).cpu().detach().numpy()
-            
-            # image_batch.permute(0, 2, 3, 1)[j, :, :, :].cpu().detach().numpy()
-    )
+    image_batch = model.decoder(x)
+    # image_batch = model.decoder(x)
+
+    fig, ax = plt.subplots(4, 4)
+    for i in range(4):
+        for j in range(4):
+            ax[i, j].imshow(
+                unnormalize(image_batch[i*4 + j, :, :, :], dataset)\
+                    .transpose(0,1).transpose(1,2).cpu().detach().numpy()
+                # unnormalize(image_batch[j, :, :, :], mean_path, std_path)\
+                #     .transpose(0,1).transpose(1,2).cpu().detach().numpy()
+                
+                # image_batch.permute(0, 2, 3, 1)[j, :, :, :].cpu().detach().numpy()
+        )
     plt.show()
 
 

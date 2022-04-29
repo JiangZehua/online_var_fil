@@ -171,7 +171,7 @@ class Model(nn.Module):
         z = torch.randn(num_samples, self.z_dim, device=self.device)
         images = self.decoder(z)
         return images
-        
+
 if __name__ == '__main__':
     model = Model().cuda()
     #%%
@@ -193,16 +193,16 @@ if __name__ == '__main__':
     plt.show()
 
     #%%
-    #   z = torch.randn(16, model.z_dim, device=model.device)
-    #   image_batch = model.decoder(z)
-    #   fig, ax = plt.subplots(4, 4)
-    #   for i in range(4):
-    #       for j in range(4):
-    #           ax[i, j].imshow(
-    #               unnormalize(image_batch[i * 4 + j, :, :, :], dataset)\
-    #                   .transpose(0,1).transpose(1,2).cpu().detach().numpy()
-    #           )
-    #   plt.show()
+    z = torch.randn(16, model.z_dim, device=model.device)
+    image_batch = model.decoder(z)
+    fig, ax = plt.subplots(4, 4)
+    for i in range(4):
+        for j in range(4):
+            ax[i, j].imshow(
+                unnormalize(image_batch[i * 4 + j, :, :, :], dataset)\
+                    .transpose(0,1).transpose(1,2).cpu().detach().numpy()
+            )
+    plt.show()
 
     # %%
     torch.save(model.decoder.state_dict(), 'vae_decoder.pt')

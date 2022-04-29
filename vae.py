@@ -12,7 +12,7 @@ import torch.nn.functional as F
 
 BATCH_SIZE = 32
 
-device = 'cpu'
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 class MyData(torch.utils.data.Dataset):
     def __init__(self, img_dir):
